@@ -1,66 +1,59 @@
-## Foundry
+# LiquidityPool 💧
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+An advanced, gas-optimized smart contract for interacting with Uniswap V2 pools. Built with Solidity and Foundry, this project allows users to seamlessly swap tokens and manage liquidity, featuring a "Zap" function to enter a liquidity pool using only a single asset.
 
-Foundry consists of:
+## Features ✨
+- One-Click Zap (Add Liquidity): Supply a single token (e.g., USDT) and the contract automatically swaps half for the paired token (e.g., DAI) and provisions both into the Uniswap V2 Liquidity Pool in one transaction.
+- Remove Liquidity: Easily burn LP tokens to retrieve the underlying assets.
+- Token Swapping: Direct ERC20 to ERC20 token swaps with slippage protection.
+- Safe Transfers: Implements OpenZeppelin's SafeERC20 (safeTransferFrom, forceApprove) for maximum compatibility with non-standard tokens.
+- Gas Optimized: 
+  * Protocol addresses (Router, Factory, Tokens) are declared as immutable.
+  * Uses Solidity Custom Errors (ZeroAmount, InvalidPath) instead of string reverts.
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Prerequisites 📋
+- Foundry installed on your system.
+- An Arbitrum Mainnet RPC URL (Alchemy, Infura, etc.) to run the fork tests.
 
-## Documentation
+## Setup & Installation 🛠️
 
-https://book.getfoundry.sh/
+1. Clone the repository:
+   git clone https://github.com/your-username/LIQUIDITY-POOL.git
+   cd LIQUIDITY-POOL
 
-## Usage
+2. Install dependencies (OpenZeppelin contracts):
+   forge install OpenZeppelin/openzeppelin-contracts --no-commit
 
-### Build
+3. Build the project:
+   forge build
 
-```shell
-$ forge build
-```
+## Testing 🧪
+The test suite (LiquidityPoolTest.sol) is designed to run against real Uniswap V2 contracts on the Arbitrum Mainnet. It impersonates a whale account to execute live zaps, swaps, and liquidity removals.
 
-### Test
+Important: Because this project uses live mainnet addresses, you MUST run the tests on an Arbitrum Mainnet fork.
 
-```shell
-$ forge test
-```
+Run the tests using the following command (replace <YOUR_ARBITRUM_RPC_URL> with your actual endpoint):
+   forge test --fork-url <YOUR_ARBITRUM_RPC_URL>
 
-### Format
+To view detailed traces (useful for verifying exact token balances and gas consumption):
+   forge test --fork-url <YOUR_ARBITRUM_RPC_URL> -vvvv
 
-```shell
-$ forge fmt
-```
+## Smart Contract Architecture 🏗️
+### LiquidityPool.sol
+- constructor(...): Hardcodes the V2 Router, Factory, USDT, and DAI addresses to save gas.
+- swapTokens(...): Executes standard exact-input token swaps.
+- addLiquidity(...): The "Zap" function. Divides the input token amount in half, swaps one half for the paired token, and adds both to the Dex liquidity pool, returning LP tokens to the user.
+- removeLiquidity(...): Approves the router to burn the user's LP tokens and returns the underlying paired assets to the user.
 
-### Gas Snapshots
+## License 📄
+This project is licensed under the MIT License.
 
-```shell
-$ forge snapshot
-```
+====================================================================
+DESCRIPCIÓN GITHUB (Inglés - Máx 250 caracteres)
+====================================================================
+A smart contract to zap into Uniswap V2 pools using a single asset. Built with Solidity and Foundry, it features SafeERC20, slippage protection, and automated liquidity management tested on an Arbitrum mainnet fork.
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+====================================================================
+DESCRIPCIÓN GITHUB (Español - Máx 250 caracteres)
+====================================================================
+Smart contract en Solidity y Foundry para pools de Uniswap V2. Incluye función Zap para añadir liquidez con un solo token, SafeERC20, protección anti-slippage y tests ejecutados en un fork de Arbitrum mainnet.
